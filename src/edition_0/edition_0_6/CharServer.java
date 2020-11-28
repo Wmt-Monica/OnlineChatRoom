@@ -83,12 +83,25 @@ public class CharServer {
                         }
 
                     }
-                } catch (Exception e) {  // 捕捉到任何的异常都将这个服务器关闭掉，同时将其客户端从客户端集合中移除，最后释放其中的资源
+                } catch (IOException e) {
+                    // 如果遇到异常，就将该客户端关闭
+                    if (s != null){
+                        try {
+                            s.close();
+                        } catch (IOException ex) {
+                            System.out.println("一个客户端关闭");
+                        }
+                    }
 
+                }finally {
+                    // 无论是否捕捉到异常，最后都要将其输入输出流关闭
                     try {
-                        clients.remove(s);
-                        input.close();
-                        s.close();
+                        if (input != null){
+                            input.close();
+                        }
+                        if (output != null){
+                            output.close();
+                        }
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
